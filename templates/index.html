@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake News Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url("https://cdn.pixabay.com/photo/2017/09/08/03/51/corruption-2727571_1280.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            /* Fill the background area */
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 60px;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 1);
+            /* Add transparency to the container */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        p {
+            text-align: justify;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            max-width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+
+            padding: 8px 22px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: auto;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .fake {
+            background-color: #ff4d4d;
+        }
+
+        .real {
+            background-color: #66cc66;
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 90%;
+                margin: 20px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Fake News Detection</h1><br>
+        <p>Fake news detection is crucial in today's information age. Misinformation can spread rapidly and have serious
+            consequences.
+            Use the form below to submit a news article, and our system will predict whether it's likely to be fake or
+            real.</p>
+        <br><br>
+        <form id="newsForm" action="/predict" method="post">
+            <label for="newsInput">Enter the news article:</label>
+            <input type="text" id="newsInput" name="newsInput" required>
+            <input type="submit" value="Submit" >
+        </form>
+        <div id="result"></div>
+        <br>
+
+    <script>
+        // JavaScript code to handle form submission and display prediction results
+        document.getElementById("newsForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Get the input value
+            var newsInput = document.getElementById("newsInput").value;
+
+            // Make an AJAX request to the server for prediction
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/predict", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Display the prediction result
+                    var resultDiv = document.getElementById("result");
+                    resultDiv.style.display = "block";
+                    resultDiv.innerHTML = xhr.responseText;
+                }
+            };
+            xhr.send(JSON.stringify({ newsInput: newsInput }));
+        });
+    </script>
+</body>
+
+</html>
